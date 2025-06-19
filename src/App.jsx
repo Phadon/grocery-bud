@@ -3,8 +3,22 @@ import Form from './Form'
 import Items from './Items'
 import { nanoid } from 'nanoid'
 
+const getLocalStorage = () => {
+  let list = localStorage.getItem('list')
+  if (list) {
+    list = JSON.parse(localStorage.getItem('list'))
+  } else {
+    list = []
+  }
+  return list
+}
+
+const setLocalStorage = (items) => {
+  localStorage.setItem('list', JSON.stringify(items))
+}
+
 const App = () => {
-  const [items, setItems] = useState([])
+  const [items, setItems] = useState(getLocalStorage())
 
   const addItem = (itemName) => {
     const newItem = {
@@ -12,16 +26,30 @@ const App = () => {
       completed: false,
       id: nanoid(),
     }
-    setItems([...items, newItem])
+    const newItems = [...items, newItem]
+    setItems(newItems)
+    setLocalStorage(newItems)
   }
   const deleteItem = (toDelete) => {
-    setItems(items.filter((item) => item !== toDelete))
+    const newItems = items.filter((item) => item !== toDelete)
+    setItems(newItems)
+    setLocalStorage(newItems)
+  }
+  const editItem = (editItemId) => {
+    const newItems = items.map((item) => {
+      if (item.id === editItemId) {
+        item.completed = !item.completed
+      }
+      return item
+    })
+    setItems(newItems)
+    setLocalStorage(newItems)
   }
 
   return (
     <section className='section-center'>
       <Form addItem={addItem} />
-      <Items items={items} deleteItem={deleteItem} />
+      <Items items={items} deleteItem={deleteItem} editItem={editItem} />
     </section>
   )
 }
