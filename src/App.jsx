@@ -16,28 +16,12 @@ const App = () => {
   }
   const deleteItem = (toDelete) => {
     setItems(items.filter((item) => item !== toDelete))
-    console.log(items)
-  }
-
-  const toggleItemState = (isComplete, id) => {
-    setItems(
-      items.filter((item) => {
-        if (item.id === id) {
-          item.completed = !isComplete
-        }
-        return item
-      })
-    )
   }
 
   return (
     <section className='section-center'>
       <Form addItem={addItem} />
-      <Items
-        items={items}
-        deleteItem={deleteItem}
-        toggleItemState={toggleItemState}
-      />
+      <Items items={items} deleteItem={deleteItem} />
     </section>
   )
 }
